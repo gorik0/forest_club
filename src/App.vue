@@ -7,6 +7,7 @@ import axios from 'axios';
 import { ref } from "vue";
 
 const items = ref([])
+const favorites = ref([])
 
 const filter = reactive({
   queryIn: "",
@@ -14,7 +15,15 @@ const filter = reactive({
 })
 
 
-
+const fetchFavorties = async () => {
+  try {
+    const data = await axios.get(`http://localhost:8080/trees/favorites`);
+    favorites.value = data.data;
+    console.log(data);
+  } catch (error) {
+    alert(error);
+  }
+}
 
 const onChangeQueryIn = (event) => {
   filter.queryIn = event.target.value
@@ -42,8 +51,29 @@ const fetchTrees = async () => {
   } catch (error) {
     alert(error);
   }
+  console.log("Starting fetchuing favorites");
+
+
+
+  fetchFavorties().then(() => {
+    mergeFavoritesWithTrees()
+  })
+
+
+  console.log("Finished fetchuing favorites");
+  console.log(favorites.value);
 };
 
+
+const mergeFavoritesWithTrees = () => {
+  items.value.forEach(item => {
+    item.isFavorite = favorites.value.some(favorite => favorite.parent_id === item.id)
+  })
+  console.log("merged");
+
+  console.log(items.value);
+
+}
 watch(filter, fetchTrees);
 onMounted(fetchTrees);
 // const items = [
