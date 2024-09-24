@@ -2,49 +2,50 @@
 
 import Header from "./components/Header.vue";
 import TreeList from "./components/TreeList.vue";
-import Drawer from "./components/Drawer.vue";
-import { onMounted, watch } from "vue";
+import { onMounted, reactive, watch } from "vue";
 import axios from 'axios';
 import { ref } from "vue";
 
 const items = ref([])
-const sortBy = ref("")
 
-
-
-
-watch(sortBy, async () => {
-
-
-  try {
-    const data = await axios.get(`http://localhost:8080/trees/?sortBy=${sortBy.value}`)
-    items.value = data.data
-    console.log(data);
-  } catch (error) {
-    alert(error)
-  }
-
-
+const filter = reactive({
+  queryIn: "",
+  sortBy: ""
 })
 
-onMounted(async () => {
-  try {
-    const data = await axios.get('http://localhost:8080/trees')
-    items.value = data.data
-    console.log(data);
 
-  } catch (error) {
-    alert(error)
-  }
+
+
+const onChangeQueryIn = (event) => {
+  filter.queryIn = event.target.value
 }
-)
 
 const onClickSortBy = (event) => {
-  sortBy.value = event.target.value
+  filter.sortBy = event.target.value
 }
 
 
 
+
+const fetchTrees = async () => {
+  console.log(typeof (filter.sortBy));
+  const params = {
+    sortBy: filter.sortBy,
+  };
+  if (filter.queryIn) {
+    params.queryIn = filter.queryIn;
+  }
+  try {
+    const data = await axios.get(`http://localhost:8080/trees`, { params });
+    items.value = data.data;
+    console.log(data);
+  } catch (error) {
+    alert(error);
+  }
+};
+
+watch(filter, fetchTrees);
+onMounted(fetchTrees);
 // const items = [
 //   {
 //     id: 21313,
@@ -129,8 +130,8 @@ const onClickSortBy = (event) => {
           <option value="id">id</option>
           <option value="img">img</option>
         </select>
-        <input type="text" class=" outline-none border-2 w-fit border-slate-300 rounded-xl p-2 w-1/4"
-          placeholder="Поиск">
+        <input @input="onChangeQueryIn" type="text"
+          class=" outline-none border-2 w-fit border-slate-300 rounded-xl p-2 w-1/4" placeholder="Поиск">
 
       </div>
 
