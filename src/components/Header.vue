@@ -1,3 +1,12 @@
+<script setup>
+import { inject } from 'vue';
+
+
+
+const { openDrawer } = inject('cartActions');
+
+
+</script>
 <template>
 
     <header class="flex justify-between  items-center border-b-2 border-green-600 px-2  ">
@@ -19,7 +28,7 @@
             <ul class="flex items-center gap-6">
                 <li class="flex items-center gap-1 opacity-80 hover:opacity-100 hover:cursor-pointer">
                     <img src="../assets/fore.png" alt="main" class="w-6">
-                    <b>Главная</b>
+                    <b @click="openDrawer">Главная</b>
                     <img src="../assets/fore.png" alt="main" class="w-6">
                 </li>
                 <li class="flex items-center gap-1 opacity-80 hover:opacity-100 hover:cursor-pointer">

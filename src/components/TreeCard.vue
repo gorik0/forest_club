@@ -20,7 +20,7 @@ const inj = inject('onClickFavorite');
 const onClickFavorite = () => {
     const item = {
         id: props.id,
-        isFavorite: !props.isFavorite
+        isFavorite: props.isFavorite
     }
 
     inj(item)
@@ -47,7 +47,7 @@ const onClickFavorite = () => {
                 <b>{{ price }}</b>
             </div>
             <div>
-                <img src="../assets/plus.png" class="w-8" alt="">
+                <img @click="onClickAdd" src="../assets/plus.png" :class="{ 'opacity-30': isAdded }" class="w-8" alt="">
             </div>
 
         </div>

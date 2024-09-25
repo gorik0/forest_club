@@ -1,5 +1,6 @@
 <script setup>
 
+import Drawer from "./components/Drawer.vue";
 import Header from "./components/Header.vue";
 import TreeList from "./components/TreeList.vue";
 import { onMounted, provide, reactive, watch } from "vue";
@@ -64,6 +65,16 @@ const fetchTrees = async () => {
   console.log(favorites.value);
 };
 
+const onClickAdd = (item) => {
+  console.log("onClickAdd");
+  console.log("item ID ::: ", item.id);
+  items.value.find(i => i.id === item.id).isAdded = !item.isAdded
+  console.log(items.value);
+
+}
+
+
+provide('onClickAdd', { onClickAdd })
 
 const mergeFavoritesWithTrees = () => {
   items.value.forEach(item => {
@@ -104,63 +115,29 @@ const onClickFavorite = (item) => {
 
 }
 
+const isDrawerOpen = ref(false)
+const openDrawer = () => {
+  console.log("open drawer");
+
+  isDrawerOpen.value = true
+}
+
+const closeDrawer = () => {
+  console.log("close drawer");
+
+  isDrawerOpen.value = false
+}
+
+provide('cartActions', {
+  openDrawer,
+  closeDrawer
+})
 provide('onClickFavorite', onClickFavorite)
 
 
 watch(filter, fetchTrees);
 onMounted(fetchTrees);
-// const items = [
-//   {
-//     id: 21313,
-//     img: "/src/assets/lipa.png",
-//     title: "Липа Целительная",
-//     price: 100,
-//     isFavorite: true,
-//     isAdded: true,
-//     onClickFavorite: () => { },
-//     onClickAdd: () => { }
-//   },
-//   {
-//     id: 21313,
-//     img: "/src/assets/pine.png",
-//     title: "Липа Целительная",
-//     price: 100,
-//     isFavorite: true,
-//     isAdded: true,
-//     onClickFavorite: () => { },
-//     onClickAdd: () => { }
-//   },
-//   {
-//     id: 21313,
-//     img: "/src/assets/pine.png",
-//     title: "Липа Целительная",
-//     price: 100,
-//     isFavorite: true,
-//     isAdded: true,
-//     onClickFavorite: () => { },
-//     onClickAdd: () => { }
-//   },
-//   {
-//     id: 21313,
-//     img: "/src/assets/pine.png",
-//     title: "Липа Целительная",
-//     price: 100,
-//     isFavorite: true,
-//     isAdded: true,
-//     onClickFavorite: () => { },
-//     onClickAdd: () => { }
-//   },
-//   {
-//     id: 21313,
-//     img: "/src/assets/pine.png",
-//     title: "Липа Целительная",
-//     price: 100,
-//     isFavorite: true,
-//     isAdded: true,
-//     onClickFavorite: () => { },
-//     onClickAdd: () => { }
-//   }
-// ]
+
 
 
 </script>
@@ -170,7 +147,10 @@ onMounted(fetchTrees);
 
   <div class="m-auto w-4/5  bg-white  my-4 rounded-xl shadow-xl p-5">
 
-    <!-- <Drawer /> -->
+    <div>
+
+      <Drawer v-if="isDrawerOpen" @close="closeDrawer" :items="items" />
+    </div>
 
     <Header />
 

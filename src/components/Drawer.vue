@@ -5,10 +5,11 @@ import DrawerList from "./DrawerList.vue";
 import { ref } from "vue";
 defineProps({
 
-    onBackPress: Function
+    onBackPress: Function,
+    items: Array
 })
 
-
+const emit = defineEmits(['close'])
 const isDisabled = ref(true)
 </script>
 
@@ -18,7 +19,7 @@ const isDisabled = ref(true)
     <div class="fixed top-0 left-0 w-full h-full bg-black opacity-30 z-20"> </div>
     <div class=" flex flex-col fixed right-0 top-0 bg-white w-80 h-full z-30">
         <div class="flex gap-5 items-center p-5">
-            <img @click="onBackPress" src="../assets/arrow.png"
+            <img @click="() => emit('close')" src="../assets/arrow.png"
                 class="w-10 transition opacity-30 hover:-translate-x-1 hover:opacity-100 " alt="">
 
             <h1 class="text-2xl  uppercase font-bold ">Часовня</h1>
@@ -27,7 +28,7 @@ const isDisabled = ref(true)
         </div>
         <div>
             <div class="m-5">
-                <DrawerList />
+                <DrawerList :items="items" />
             </div>
 
         </div>
