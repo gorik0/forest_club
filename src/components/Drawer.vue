@@ -6,11 +6,13 @@ import { ref } from "vue";
 defineProps({
 
     onBackPress: Function,
-    items: Array
+    items: Array,
+    isDisabledBtn: Boolean
 })
 
-const emit = defineEmits(['close'])
-const isDisabled = ref(true)
+
+
+const emit = defineEmits(['close', 'makeOrderBtn'])
 </script>
 
 <template>
@@ -42,7 +44,7 @@ const isDisabled = ref(true)
                 <span>10000</span>
             </div>
 
-            <button :disabled="isDisabled"
+            <button :disabled="isDisabledBtn" @click="() => emit('makeOrderBtn', items)"
                 class="p-5 bg-green-600 disabled:bg-green-200 w-full rounded-xl hover:cursor-pointer active:bg-green-800">CLICK
                 ME</button>
 

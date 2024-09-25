@@ -1,14 +1,18 @@
 <script setup>
 
+
+import { RouterLink } from "vue-router";
+import { RouterView } from "vue-router";
 import Drawer from "./components/Drawer.vue";
 import Header from "./components/Header.vue";
 import TreeList from "./components/TreeList.vue";
-import { onMounted, provide, reactive, watch } from "vue";
+import { computed, onMounted, provide, reactive, watch } from "vue";
 import axios from 'axios';
 import { ref } from "vue";
 
 const items = ref([])
 const favorites = ref([])
+const isDisabledBtn = computed(() => !items.value.some(i => i.isAdded))
 
 const filter = reactive({
   queryIn: "",
@@ -135,6 +139,20 @@ provide('cartActions', {
 provide('onClickFavorite', onClickFavorite)
 
 
+const makeOrderBtn = async (itemsToOrder) => {
+  itemsToOrder.forEach(item => item.isAdded = false)
+  console.log("makeOrderBtn with items ::: ", itemsToOrder);
+  try {
+    const response = await axios.post(`http://localhost:8080/trees/order`, itemsToOrder);
+
+    console.log(response);
+
+  } catch (error) {
+    alert(error);
+  }
+
+}
+
 watch(filter, fetchTrees);
 onMounted(fetchTrees);
 
@@ -149,7 +167,8 @@ onMounted(fetchTrees);
 
     <div>
 
-      <Drawer v-if="isDrawerOpen" @close="closeDrawer" :items="items" />
+      <Drawer v-if="isDrawerOpen" :isDisabledBtn="isDisabledBtn" @close="closeDrawer" @makeOrderBtn="makeOrderBtn"
+        :items="items.filter(i => i.isAdded)" />
     </div>
 
     <Header />
@@ -157,7 +176,10 @@ onMounted(fetchTrees);
     <div class="flex justify-between mt-5">
 
 
-      <h1 class="text-3xl font-bold text-green-950">HELO gorik0</h1>
+      <RouterLink to="/favorites">
+
+        <h1 class="text-3xl font-bold text-green-950">HELO gorik0</h1>
+      </RouterLink>
       <div class="flex  gap-10 justify-between pr-5 items-center">
 
         <select @click="onClickSortBy" name="Вариант прочищения"
@@ -188,7 +210,9 @@ onMounted(fetchTrees);
 
 
         <TreeList :items="items" />
+        <p>egor</p>
       </div>
+      <RouterView />
     </div>
   </div>
 

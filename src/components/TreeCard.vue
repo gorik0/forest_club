@@ -20,7 +20,7 @@ const inj = inject('onClickFavorite');
 const onClickFavorite = () => {
     const item = {
         id: props.id,
-        isFavorite: props.isFavorite
+        isFavorite: !props.isFavorite
     }
 
     inj(item)
