@@ -2,7 +2,7 @@
 
 import Header from "./components/Header.vue";
 import TreeList from "./components/TreeList.vue";
-import { onMounted, reactive, watch } from "vue";
+import { onMounted, provide, reactive, watch } from "vue";
 import axios from 'axios';
 import { ref } from "vue";
 
@@ -74,6 +74,39 @@ const mergeFavoritesWithTrees = () => {
   console.log(items.value);
 
 }
+const makeCallToServerFavorite = async (item) => {
+  try {
+    const data = {
+      parent_id: item.id,
+      isFavorite: item.isFavorite
+    }
+    console.log("Making call to server with item ::: ", data);
+
+    const response = await axios.post(`http://localhost:8080/trees/favorites`, data);
+    console.log(response);
+  } catch (error) {
+    alert(error);
+
+  }
+}
+
+const onClickFavorite = (item) => {
+  console.log("onClickFavorite");
+  makeCallToServerFavorite(item);
+  items.value = items.value.map(i => {
+    if (i.id === item.id) {
+      i.isFavorite = item.isFavorite
+    }
+    return i
+  })
+  console.log(item);
+
+
+}
+
+provide('onClickFavorite', onClickFavorite)
+
+
 watch(filter, fetchTrees);
 onMounted(fetchTrees);
 // const items = [

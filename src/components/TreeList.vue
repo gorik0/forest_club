@@ -1,11 +1,11 @@
-<script setup>
-import { ref } from "vue";
+    <script setup>
+    import { ref } from "vue";
 
-import TreeCard from "./TreeCard.vue";
+    import TreeCard from "./TreeCard.vue";
 
-defineProps({
-    items: Array
-})
+    defineProps({
+        items: Array
+    })
 
 
 
@@ -20,7 +20,7 @@ defineProps({
 
         <TreeCard v-for="item in items" :key=item.id :imga="item.img" :price="item.price" :title="item.title"
             :onClickFavorite="item.onClickFavorite" :onClickAdd="item.onClickAdd" :isAdded="item.isAdded"
-            :isFavorite="item.isFavorite" />
+            :isFavorite="item.isFavorite" :id="item.id" />
 
 
     </div>

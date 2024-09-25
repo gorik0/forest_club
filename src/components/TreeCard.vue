@@ -1,17 +1,31 @@
 <script setup>
+import { inject } from 'vue';
 
-defineProps({
 
+const props = defineProps({
+
+    id: Number,
     imga: String,
     isAdded: Boolean,
     isFavorite: Boolean,
     title: String,
     price: Number,
-    onClickFavorite: Function,
+
     onClickAdd: Function
 
 
 });
+const inj = inject('onClickFavorite');
+
+const onClickFavorite = () => {
+    const item = {
+        id: props.id,
+        isFavorite: !props.isFavorite
+    }
+
+    inj(item)
+}
+
 
 </script>
 
